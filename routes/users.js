@@ -16,7 +16,7 @@ router.post('/auth', (req, res, next) => {
     if(credentials.username != '' && credentials.password != '')
         User.findOne({ where: { username: credentials.username, password: credentials.password }}).then( user => {
             if(user)
-                res.json({ userInfo: user.dataValues })
+                res.json({ access_token: user.access_token })
             else
                 res.json({ serverError: 'Invalid username or password'})
         }).catch( err => {
@@ -28,9 +28,8 @@ router.post('/auth', (req, res, next) => {
 })
 
 router.get('/info', (req, res, next) => {
-    var username = req.query.credentials.username ? req.query.credentials.username : ''
-    var password = req.query.credentials.password ? req.query.credentials.password : ''
-    var query = { where : { username : username, password : password } }
+    var access_token = req.query.access_token ? req.query.access_token : ''
+    var query = { where : { access_token : access_token } }
     User.findOne(query).then(user => {
         if(user)
             res.json({ userInfo: user })
